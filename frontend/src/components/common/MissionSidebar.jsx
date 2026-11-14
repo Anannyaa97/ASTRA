@@ -53,7 +53,7 @@ export default function MissionSidebar() {
 
       <div className="hidden border-t border-white/10 pt-3 md:block">
         <ApiStatus />
-        <p className="mt-2 text-[11px] text-ink-dim">&copy; 2026 Anannya A K</p>
+        <p className="mt-2 text-[11px] text-ink-dim">&copy; 2026 Team Orbitelle</p>
       </div>
     </aside>
   )

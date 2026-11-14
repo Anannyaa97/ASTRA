@@ -7,7 +7,7 @@ const YEAR = 2026
 
 const MIT = `MIT License
 
-Copyright (c) ${YEAR} Anannya A K
+Copyright (c) ${YEAR} Team Orbitelle
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -40,6 +40,7 @@ export default function About() {
       <section aria-label="Who made it" className="panel space-y-3 p-5">
         <h2 className="flex items-center gap-2 text-xl font-extrabold"><Users size={20} aria-hidden="true" /> Made by</h2>
         <p><strong>Anannya A K</strong>, designer and developer</p>
+        <p><strong>Saaniga Santosh</strong>, researcher</p>
         <ul className="space-y-2">
           <li>
             Team <strong>Orbitelle</strong>{' '}
@@ -91,7 +92,7 @@ export default function About() {
       </section>
 
       <p className="pb-4 text-center text-sm text-ink-dim">
-        &copy; {YEAR} Anannya A K &middot; Team Orbitelle &middot; MIT License
+        &copy; {YEAR} Team Orbitelle &middot; MIT License
       </p>
     </div>
   )

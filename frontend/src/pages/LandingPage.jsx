@@ -68,7 +68,7 @@ export default function LandingPage() {
             ASTRA is a training game. Numbers in the game are made-up learning units, not real NASA measurements.
             Real NASA data is always labelled LIVE, CACHED or ARCHIVED, with its source.
           </p>
-          <p className="land-note">&copy; 2026 Anannya A K &middot; Team Orbitelle &middot; MIT License</p>
+          <p className="land-note">&copy; 2026 Team Orbitelle &middot; MIT License</p>
         </section>
       </main>
     </div>
