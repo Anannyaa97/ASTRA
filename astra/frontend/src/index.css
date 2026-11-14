@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* ASTRA design system tokens (Tailwind v4 theme) */
+@theme {
+  --color-space-950: #07060f;
+  --color-space-900: #0d0a1c;
+  --color-space-800: #150f2a;
+  --color-space-700: #1d1531;
+  --color-space-600: #2f2347;
+  --color-ink: #f4ecda;
+  --color-ink-dim: #c0b6cf;
+
+  --color-electric: #54c7e0;
+  --color-violet: #b39bff;
+  --color-ok: #5eead4;
+  --color-warn: #ffb23e;
+  --color-danger: #ff7a6b;
+
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body, #root { min-height: 100%; }
+
+body {
+  margin: 0;
+  background: #07060f;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings use the round, wide display font (same as the game). */
+h1, h2 { font-family: "Unbounded Variable", "Unbounded", var(--font-sans); font-weight: 600; letter-spacing: -0.01em; }
+
+/* Glass panels: frosted, with a bright top edge, floating over the galaxy backdrop. */
+.panel {
+  background: linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.035));
+  border: 1px solid rgba(255,244,224,.16);
+  border-radius: 1.5rem;
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 24px 60px rgba(0,0,0,.4);
+}
+@supports not (backdrop-filter: blur(1px)) { .panel { background: rgba(26,18,48,.94); } }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 3rem; padding: .75rem 1.5rem; border-radius: .9rem;
+  font-weight: 700; font-size: 1rem; cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-primary {
+  background: linear-gradient(135deg, #ffd27a, #ffb23e 55%, #ff9a3e);
+  color: #1a1020; box-shadow: 0 10px 30px rgba(255,178,62,.38), inset 0 1px 0 rgba(255,255,255,.5);
+}
+.btn-primary:hover { box-shadow: 0 14px 38px rgba(255,178,62,.5), inset 0 1px 0 rgba(255,255,255,.5); }
+.btn-ghost {
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,244,224,.22); color: var(--color-ink);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.btn-ghost:hover { background: rgba(255,255,255,.15); }
+
+/* Visible keyboard focus everywhere (accessibility) */
+:focus-visible { outline: 3px solid var(--color-warn); outline-offset: 2px; }
+
+/* Status pill labels: LIVE / CACHED / ARCHIVED / SIMULATED */
+.pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .15rem .6rem; border-radius: 999px;
+  font-size: .7rem; font-weight: 800; letter-spacing: .08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* Simulated radiation particles in the habitat view */
+@keyframes rad-fall {
+  from { transform: translate(0, -20px); opacity: 0; }
+  15% { opacity: 0.9; }
+  to { transform: translate(-26px, 330px); opacity: 0; }
+}
+.rad-particle { animation: rad-fall 1.9s linear infinite; opacity: 0.7; }
+
+/* Living habitat: gentle motion that always reflects real mission state (disabled by reduced-motion above) */
+@keyframes crew-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+.crew-bob { animation: crew-bob 2.4s ease-in-out infinite; }
+@keyframes sun-pulse { 0%, 100% { opacity: .16; } 50% { opacity: .3; } }
+.sun-glow { animation: sun-pulse 4s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.star-twinkle { animation: twinkle 3s ease-in-out infinite; }
+@keyframes flicker { 0%, 100% { opacity: .55; } 40% { opacity: .15; } 55% { opacity: .5; } 70% { opacity: .1; } }
+.lights-flicker { animation: flicker 1.6s steps(1, end) infinite; }
+@keyframes siren { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.siren { animation: siren .9s ease-in-out infinite; }
+@keyframes alarm-edge { 0%, 100% { opacity: .15; } 50% { opacity: .55; } }
+.alarm-edge { animation: alarm-edge .9s ease-in-out infinite; }
+
+/* The ring around whichever astronaut is speaking */
+@keyframes speak-ring { 0%, 100% { opacity: .9; transform: scale(.92); } 50% { opacity: .25; transform: scale(1.08); } }
+.speak-ring { transform-box: fill-box; transform-origin: center; animation: speak-ring 1.4s ease-in-out infinite; }
+
+
+/* Calm mode: the player's own switch for less movement (works like the system reduced-motion setting). */
+:root[data-calm="true"] *, :root[data-calm="true"] *::before, :root[data-calm="true"] *::after {
+  animation-duration: .001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .001ms !important;
+  scroll-behavior: auto !important;
+}
+:root[data-calm="true"] .g-dust { display: none; }
