@@ -243,7 +243,7 @@ showing nothing or inventing data — and always labels which one you're looking
 | | |
 |---|---|
 | **Anannya A K** | Designer & Developer · [GitHub](https://github.com/Anannyaa97) |
-| **Saaniga Santosh** | Researcher |
+| **Saaniga Santosh** | Researcher  · [GitHub](https://github.com/saanigaa-santhosh) |
 
 ## 🎵 Audio Attribution
 
