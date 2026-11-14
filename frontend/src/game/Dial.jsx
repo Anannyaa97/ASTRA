@@ -13,7 +13,7 @@ const arc = (a0, a1, r) => {
 const TICKS = Array.from({ length: 11 }, (_, i) => START + (SWEEP / 10) * i)
 
 export default function Dial({ label, value, hint }) {
-  const level = levelOf(value)
+  const level = levelOf(Math.round(value))
   const color = COLORS[level]
   const v = Math.max(0, Math.min(100, value))
   const angle = START + (SWEEP * v) / 100

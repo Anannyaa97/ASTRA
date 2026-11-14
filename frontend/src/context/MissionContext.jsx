@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { api } from '../services/api'
+import { markDone } from '../utils/ladder'
 
 // The backend simulation is the only authority for game state.
 // This context just holds the latest mission the server sent us.
@@ -20,6 +21,16 @@ export function MissionProvider({ children }) {
   const [error, setError] = useState(null)
   const [decisionResult, setDecisionResult] = useState(null) // what the player just chose, plus the lesson
   const [dayReport, setDayReport] = useState(null)           // the daily report waiting to be read
+  const previousMission = useRef(null)
+
+  useEffect(() => {
+    const previous = previousMission.current
+    if (previous && mission && previous.id === mission.id
+      && previous.status === 'active' && mission.status === 'success') {
+      markDone(mission.difficulty)
+    }
+    previousMission.current = mission
+  }, [mission])
 
   useEffect(() => {
     const id = readId()

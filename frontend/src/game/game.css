@@ -38,6 +38,11 @@
 .g-stage { max-width: 22rem; }
 .g-stage .g-display { font-size: 0.8rem; font-weight: 600; color: var(--g-bone-dim); }
 .g-stage p { font-size: 1.05rem; font-weight: 700; margin: 2px 0 0; text-wrap: balance; }
+.g-signal { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; padding: 3px 10px; border-radius: 999px;
+  font-size: .78rem; font-weight: 700; width: fit-content; }
+.g-signal.delayed { color: var(--g-sun); background: rgba(255, 178, 62, .14); }
+.g-signal.blackout { color: #ff8f82; background: rgba(255, 93, 74, .16); }
+.g-signal.blackout svg { animation: g-sunpulse 1.6s ease-in-out infinite; }
 
 .g-iconbtn {
   justify-self: end; width: 3rem; height: 3rem; border-radius: 999px; display: grid; place-items: center;
@@ -49,7 +54,7 @@
 /* The sun's path across the sky is the day counter */
 .g-sunarc { text-align: center; }
 .g-sunarc svg { display: block; width: clamp(220px, 26vw, 330px); height: auto; margin: 0 auto; overflow: visible; }
-.g-sunarc .g-day { font-size: 1.25rem; font-weight: 700; margin-top: -6px; }
+.g-sunarc .g-day { font-size: 1.25rem; font-weight: 700; margin-top: -6px; color: #fff; text-shadow: 0 1px 3px rgba(6,7,13,.9), 0 0 8px rgba(6,7,13,.8); }
 .g-sunarc .g-of { color: var(--g-bone-dim); font-size: .95rem; }
 
 /* Analog dials */
@@ -198,6 +203,7 @@
 .g-pv-list li em { font-style: normal; font-weight: 700; }
 .g-pv-sub { font-weight: 400; font-size: .8rem; color: var(--g-bone-dim); }
 .g-pv-list li { flex-wrap: wrap; }
+.g-pv-list li span { flex-basis: 100%; padding-left: 24px; }
 .g-pv-list li span, .g-pv-note, .g-pv-foot { color: var(--g-bone-dim); }
 .g-pv-note { font-size: .95rem; display: flex; gap: 6px; align-items: center; }
 .g-pv-foot { margin-top: 10px; font-size: .78rem; }

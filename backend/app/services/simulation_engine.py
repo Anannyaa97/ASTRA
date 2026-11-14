@@ -21,6 +21,20 @@ from app.services.sim_config import SimConfig
 # Values shown to the player / stored in snapshots
 VALUE_KEYS = RESOURCE_KEYS + ("research", "comms")
 
+# The link to Earth is not just on or off. Real missions deal with a weak signal
+# before they lose it completely, and a weak signal is a genuine engineering
+# warning sign, not just flavour text.
+SIGNAL_CLEAR, SIGNAL_DELAYED = 70.0, 25.0
+
+
+def signal_status(comms: float) -> str:
+    """'clear', 'delayed' or 'blackout', from the comms equipment value (0-100)."""
+    if comms >= SIGNAL_CLEAR:
+        return "clear"
+    if comms >= SIGNAL_DELAYED:
+        return "delayed"
+    return "blackout"
+
 RESOURCE_NAMES = {"power": "Power", "oxygen": "Oxygen", "water": "Water", "food": "Food"}
 
 # One kid-friendly tip per resource, used in the report when a score is low.
@@ -140,6 +154,7 @@ class Simulation:
             },
             "decided_today": self._decided_today,
             "failure": s.failure,
+            "signal": signal_status(s.comms),
         }
 
     def clone(self) -> "Simulation":

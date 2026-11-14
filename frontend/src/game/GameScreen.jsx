@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Mail, Pause, Sun, Volume2, VolumeX, X } from 'lucide-react'
+import { Mail, Pause, Radio, Sun, Volume2, VolumeX, X } from 'lucide-react'
 import '@fontsource-variable/unbounded'
 import '@fontsource/atkinson-hyperlegible/400.css'
 import '@fontsource/atkinson-hyperlegible/700.css'
@@ -17,6 +17,10 @@ import MessageOverlay, { LearningCard } from './MessageOverlay'
 import { DayReport, Ending, NightVeil } from './DayEnd'
 import Briefing, { wasBriefed } from './Briefing'
 import { sfx } from './sound'
+
+// The link to Earth is only ever shown when it is not perfectly clear, so a
+// healthy mission is not cluttered with a badge that always says "fine".
+const SIGNAL_TEXT = { delayed: 'Weak signal to Earth', blackout: 'No signal to Earth' }
 
 // The game: the whole screen is the Moon base. No sidebar, no dashboard.
 // The pause menu holds every other page. All game numbers still come from the backend simulation.
@@ -110,6 +114,11 @@ export default function GameScreen() {
           <div className="g-stage">
             <div className="g-display">Stage {stage.number} · {mission.difficulty === 'commander' ? 'Commander level' : 'Cadet level'}</div>
             <p>{stage.name}</p>
+            {SIGNAL_TEXT[state.signal] && (
+              <p className={`g-signal ${state.signal}`} role="status">
+                <Radio size={14} aria-hidden="true" /> {SIGNAL_TEXT[state.signal]}
+              </p>
+            )}
           </div>
           <SunArc day={state.day} total={state.mission_days} status={state.status} />
           <div className="g-tools">

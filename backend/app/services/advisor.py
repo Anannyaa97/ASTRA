@@ -4,7 +4,7 @@ READ ONLY and rule based. The advisors look at the current simulation and give h
 They never change the mission, and they are made-up characters, not real NASA staff.
 Every sentence is built from the real numbers in the simulation, so advice always matches the game.
 """
-from app.services.simulation_engine import HEALTH_REASON_TEXT, Simulation
+from app.services.simulation_engine import HEALTH_REASON_TEXT, Simulation, signal_status
 
 LOW, CRITICAL = 50.0, 25.0
 SEVERITY = {"danger": 0, "warn": 1, "info": 2, "ok": 3}
@@ -180,17 +180,45 @@ def _commander(sim: Simulation, others: list, remaining: int) -> list:
     return _sorted(out)
 
 
+BLACKOUT_MESSAGE = _msg(
+    "danger", "No signal",
+    "Mission Control can't be heard right now. The link to Earth is too weak to carry a message. "
+    "Restore power or repair the communication equipment, and their advice will get through again.",
+)
+
+
 def advise(sim: Simulation) -> dict:
     """Advice for the current moment. Does not modify `sim`."""
+    signal = signal_status(sim.state.comms)
+
+    # A real outpost does not get to hear from Earth whenever it likes. When the
+    # link is down, every advisor's voice goes with it -- the player is on their own
+    # until power or the equipment brings the signal back.
+    if signal == "blackout" and sim.state.status == "active":
+        blacked_out = [BLACKOUT_MESSAGE]
+        return {
+            "day": sim.state.day,
+            "status": sim.state.status,
+            "signal": signal,
+            "advisors": [{"id": i, "name": n, "focus": f, "messages": blacked_out} for i, n, f in ADVISORS],
+            "disclaimer": "The advisors are made-up characters. They read your game numbers and follow simple rules. "
+                          "Their advice is only a hint, and you make the decisions.",
+        }
+
     remaining = max(0, sim.config.mission_days - sim.state.day + 1)
     engineer = _engineer(sim, remaining)
     life = _life_support(sim, remaining)
     weather = _space_weather(sim)
     commander = _commander(sim, engineer + life + weather, remaining)
+    if signal == "delayed" and sim.state.status == "active":
+        commander = [_msg("warn", "The link is weak",
+                           "Messages to and from Earth are slow right now. Advice may be a little out of date."),
+                     *commander]
     by_id = {"commander": commander, "engineer": engineer, "life_support": life, "space_weather": weather}
     return {
         "day": sim.state.day,
         "status": sim.state.status,
+        "signal": signal,
         "advisors": [{"id": i, "name": n, "focus": f, "messages": by_id[i]} for i, n, f in ADVISORS],
         "disclaimer": "The advisors are made-up characters. They read your game numbers and follow simple rules. "
                       "Their advice is only a hint, and you make the decisions.",

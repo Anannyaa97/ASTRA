@@ -20,6 +20,10 @@ from app.services.simulation_engine import Simulation
 
 DIFFICULTIES = {
     "cadet": SimConfig(),
+    # Storm Season: a normal power budget, but solar storms hit harder and shielding matters more.
+    "storm_season": replace(SimConfig(), storm_scale=1.6, bonus_event_days=(6, 14)),
+    # The Long Night: a tighter power budget and smaller starting reserves, no extra storms.
+    "the_long_night": replace(SimConfig(), g_max=18.0, start_power=48.0, start_water=45.0, start_food=50.0),
     # Commander: less sunlight power, smaller starting supplies and two extra problems (days 5 and 13).
     "commander": replace(SimConfig(), g_max=20.0, start_power=50.0, start_water=42.0, start_food=52.0,
                          bonus_event_days=(5, 13)),

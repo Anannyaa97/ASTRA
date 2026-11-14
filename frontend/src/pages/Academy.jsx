@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ChevronDown, ExternalLink, CloudFog, Droplets, GraduationCap, ShieldCheck, Sprout, Sun, Wind } from 'lucide-react'
+import { ChevronDown, ExternalLink, CloudFog, Droplets, GraduationCap, Radio, ShieldCheck, Sprout, Sun, Wind } from 'lucide-react'
 import StatusPill from '../components/common/StatusPill'
 import { LESSONS } from '../data/lessons'
 
-const ICONS = { Sun, Wind, Droplets, Sprout, ShieldCheck, CloudFog }
+const ICONS = { Sun, Wind, Droplets, Sprout, ShieldCheck, CloudFog, Radio }
 
 function Lesson({ lesson, selected }) {
   const ref = useRef(null)

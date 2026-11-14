@@ -1,17 +1,13 @@
 import { useState } from 'react'
-import { Rocket } from 'lucide-react'
+import { Lock, Rocket } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useMission } from '../../context/MissionContext'
-
-const LEVELS = [
-  { id: 'cadet', label: 'Cadet', hint: 'A friendly first mission' },
-  { id: 'commander', label: 'Commander', hint: 'Less sunlight power, smaller supplies and two extra problems' },
-]
+import { LADDER, isUnlocked } from '../../utils/ladder'
 
 // Shown on any mission page when there is no active mission yet: an invitation to start one.
 export default function NoMission({ title = 'No mission yet' }) {
   const { startMission, busy, error } = useMission()
-  const [level, setLevel] = useState('cadet')
+  const [level, setLevel] = useState(() => LADDER.find((l) => isUnlocked(l.id))?.id ?? 'cadet')
   const navigate = useNavigate()
 
   return (
@@ -29,14 +25,23 @@ export default function NoMission({ title = 'No mission yet' }) {
       <fieldset>
         <legend className="mb-2 font-bold">Choose your level</legend>
         <div className="grid gap-2 sm:grid-cols-2">
-          {LEVELS.map((l) => (
-            <label key={l.id} className={`cursor-pointer rounded-xl border p-3 ${level === l.id ? 'border-electric bg-electric/15' : 'border-white/15 bg-white/5'}`}>
-              <input type="radio" name="level" value={l.id} checked={level === l.id}
-                onChange={() => setLevel(l.id)} className="sr-only" />
-              <span className="block font-bold">{l.label}</span>
-              <span className="block text-sm text-ink-dim">{l.hint}</span>
-            </label>
-          ))}
+          {LADDER.map((l, index) => {
+            const unlocked = isUnlocked(l.id)
+            return (
+              <label key={l.id} aria-disabled={!unlocked}
+                className={`${unlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'} rounded-xl border p-3 ${level === l.id ? 'border-electric bg-electric/15' : 'border-white/15 bg-white/5'}`}>
+                <input type="radio" name="level" value={l.id} checked={level === l.id} disabled={!unlocked}
+                  onChange={() => { if (unlocked) setLevel(l.id) }} className="sr-only" />
+                <span className="flex items-center gap-2 font-bold">
+                  {l.title}
+                  {!unlocked && <Lock aria-hidden="true" size={14} />}
+                </span>
+                <span className="block text-sm text-ink-dim">
+                  {unlocked ? l.hint : `Finish "${LADDER[index - 1].title}" first.`}
+                </span>
+              </label>
+            )
+          })}
         </div>
       </fieldset>
 

@@ -87,6 +87,20 @@ export const LESSONS = [
     game: 'When dust lands on your panels, they work at a lower percentage until you clean them.',
     tryIt: { text: 'Your Systems Engineer will tell you when the panels need care.', to: '/advisor' },
   },
+  {
+    id: 'comms',
+    title: 'The slow, sometimes broken, link to Earth',
+    icon: 'Radio',
+    bigIdea: 'Even at the speed of light, messages between the Moon and Earth take real time, and the link can drop.',
+    how: [
+      'Radio signals travel at the speed of light, but the Moon is still far enough away that a message takes over a second to arrive, and over a second more to reply.',
+      'Near the Moon\'s South Pole, Earth sits very low in the sky. Hills and crater walls can block a straight line to Earth, which is why real missions there plan to use relay equipment instead of always talking to Earth directly.',
+      'The link to Earth is also a piece of equipment. If it loses power or breaks down, the crew is on their own until it is fixed.',
+    ],
+    real: 'Every real Moon mission deals with this delay. Apollo astronauts and Mission Control had to get used to pausing and waiting for replies, and future Artemis missions near the South Pole are planning relay satellites so crews are not cut off by the terrain.',
+    game: 'Your "Link to Earth" value stands for the comms equipment\'s health. When it drops below 70, replies from Mission Control slow down. Below 25, the signal is lost completely and your advisors go quiet until power or repairs bring it back.',
+    tryIt: { text: 'Open your Mission Advisor during a weak or lost signal to see what Earth can and can\'t tell you.', to: '/advisor' },
+  },
 ]
 
 // Which lesson explains each mission event (event ids come from backend/app/data/events.py).
@@ -94,7 +108,7 @@ export const EVENT_LESSON = {
   habitat_activation: 'power',
   reduced_sunlight: 'power',
   battery_shortage: 'power',
-  communication_interruption: 'power',
+  communication_interruption: 'comms',
   science_opportunity: 'power',
   oxygen_maintenance: 'air',
   water_recycler_malfunction: 'water',

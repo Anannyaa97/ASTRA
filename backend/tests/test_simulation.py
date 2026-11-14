@@ -1,12 +1,14 @@
 import json
+from dataclasses import replace
 
 import pytest
 
 from app.data.events import EVENT_LIBRARY
 from app.services.event_manager import build_schedule, validate_event
+from app.services.sim_config import SimConfig
 from app.services.simulation_engine import (
     DecisionRequired, DuplicateDecision, InsufficientResources, InvalidDecision,
-    MissionOver, Simulation, replay,
+    MissionOver, Simulation, replay, signal_status,
 )
 
 
@@ -542,3 +544,61 @@ def test_commander_still_rewards_careful_play_and_punishes_neglect():
     assert all(run(lambda e: SMART[e.id], s) == "success" for s in range(20))
     losses = sum(run(lambda e: e.options[-1].id, s) != "success" for s in range(20))
     assert losses >= 8
+
+
+def test_cadet_and_commander_configs_are_unchanged_by_the_ladder():
+    from app.services.mission_service import DIFFICULTIES
+    assert DIFFICULTIES["cadet"] == SimConfig()
+    assert DIFFICULTIES["commander"] == replace(
+        SimConfig(), g_max=20.0, start_power=50.0, start_water=42.0, start_food=52.0,
+        bonus_event_days=(5, 13),
+    )
+
+
+def test_storm_season_and_the_long_night_are_winnable_with_smart_play():
+    from app.services.mission_service import DIFFICULTIES
+    for difficulty in ("storm_season", "the_long_night"):
+        for seed in range(20):
+            sim = Simulation(config=DIFFICULTIES[difficulty], seed=seed)
+            while sim.state.status == "active":
+                event = sim.current_event()
+                if event:
+                    sim.decide(event.id, SMART[event.id])
+                sim.advance_day()
+            assert sim.state.status == "success", f"{difficulty} failed with seed {seed}"
+
+
+def test_storm_season_and_the_long_night_are_harder_than_cadet_with_neglect():
+    from app.services.mission_service import DIFFICULTIES
+
+    def losses(difficulty):
+        count = 0
+        for seed in range(20):
+            sim = Simulation(config=DIFFICULTIES[difficulty], seed=seed)
+            while sim.state.status == "active":
+                event = sim.current_event()
+                if event:
+                    sim.decide(event.id, event.options[-1].id)
+                sim.advance_day()
+            count += sim.state.status != "success"
+        return count
+
+    cadet_losses = losses("cadet")
+    for difficulty in ("storm_season", "the_long_night"):
+        assert losses(difficulty) >= cadet_losses
+
+
+def test_signal_status_thresholds():
+    assert signal_status(100) == "clear"
+    assert signal_status(70) == "clear"
+    assert signal_status(69.9) == "delayed"
+    assert signal_status(25) == "delayed"
+    assert signal_status(24.9) == "blackout"
+    assert signal_status(0) == "blackout"
+
+
+def test_public_state_reports_the_signal_to_earth():
+    sim = quiet_sim()
+    assert sim.public_state()["signal"] == "clear"       # comms starts healthy
+    sim.state.comms = 10.0
+    assert sim.public_state()["signal"] == "blackout"

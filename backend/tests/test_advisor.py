@@ -152,3 +152,41 @@ def test_a_waiting_decision_is_a_tip_not_good_news():
     sim = Simulation(schedule={1: "greenhouse_expansion"})
     waiting = [m for m in by_id(advise(sim))["commander"] if m["headline"] == "A decision is waiting"]
     assert waiting and waiting[0]["level"] == "info"
+
+
+def test_a_lost_signal_silences_every_advisor():
+    sim = healthy_sim()
+    sim.state.power = 10.0  # would normally be an urgent, chatty engineer message
+    sim.state.comms = 10.0
+    advice = advise(sim)
+    assert advice["signal"] == "blackout"
+    for messages in by_id(advice).values():
+        assert len(messages) == 1
+        assert messages[0]["headline"] == "No signal"
+        assert "10" not in messages[0]["text"]  # the real power problem is not smuggled through
+
+
+def test_a_weak_signal_warns_but_still_advises():
+    sim = healthy_sim()
+    sim.state.comms = 40.0
+    advice = advise(sim)
+    assert advice["signal"] == "delayed"
+    assert top(advice, "commander")["headline"] == "The link is weak"
+    # the engineer still reports the real problem underneath the warning
+    assert any("40%" in m["text"] for m in by_id(advice)["engineer"])
+
+
+def test_a_clear_signal_has_no_banner_and_advises_normally():
+    advice = advise(healthy_sim())
+    assert advice["signal"] == "clear"
+    assert top(advice, "commander")["headline"] != "The link is weak"
+
+
+def test_a_lost_signal_on_a_finished_mission_still_shows_the_ending():
+    sim = Simulation(schedule={})
+    sim.state.efficiency["comms"] = 0.0  # comms stays at 0% (blackout) for the whole mission
+    while sim.state.status == "active":
+        sim.advance_day()
+    advice = advise(sim)
+    assert advice["signal"] == "blackout"
+    assert "over" in top(advice, "commander")["headline"]
