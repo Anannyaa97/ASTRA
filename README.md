@@ -15,7 +15,7 @@
 
 *Built by Team **Orbitelle** for the NASA Space Apps Challenge 2026*
 
-[Live Demo](#-live-demo) · [Features](#-features) · [Architecture](#-architecture) · [Run Locally](#-run-it-yourself) · [NASA Data](#-nasa-data-sources)
+[**▶ Play ASTRA live**](https://astra-six-delta.vercel.app/) · [Features](#-features) · [Architecture](#-architecture) · [Run Locally](#-run-it-yourself) · [NASA Data](#-nasa-data-sources)
 
 </div>
 
@@ -38,7 +38,8 @@ them about it.
 
 | | |
 |---|---|
-| **Play it live** | *(link added after deployment — see [Run It Yourself](#-run-it-yourself) in the meantime)* |
+| **Play it live** | **[astra-six-delta.vercel.app](https://astra-six-delta.vercel.app/)** |
+| **Backend API** | [astra-08cq.onrender.com](https://astra-08cq.onrender.com/api/health) *(free-tier: may take 30–50s to wake up if idle)* |
 | **Source code** | [github.com/Anannyaa97/ASTRA](https://github.com/Anannyaa97/ASTRA) |
 | **Team page** | [Orbitelle on Space Apps](https://www.spaceappschallenge.org/2026/find-a-team/orbitelle/) |
 
